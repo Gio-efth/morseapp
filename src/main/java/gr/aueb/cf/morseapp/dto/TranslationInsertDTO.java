@@ -12,9 +12,9 @@ import lombok.*;
 @Builder
 public class TranslationInsertDTO {
 
-    @NotBlank(message = "Το inputText είναι υποχρεωτικό")
+    @NotBlank(message = "Input is required")
     private String inputText;
 
-    @NotNull(message = "Η κατεύθυνση είναι υποχρεωτική")
+    @NotNull(message = "Choose a direction")
     private TranslationDirection direction;
 }
