@@ -11,4 +11,6 @@ public interface TranslationRepository extends JpaRepository<Translation, Long> 
     List<Translation> findAllByUser(User user);
 
     List<Translation> findAllByUserOrderByTimestampDesc(User user);
+
+    List<Translation> findByUser(User user);
 }
