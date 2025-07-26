@@ -42,6 +42,10 @@ public class JwtService {
         return extractedUsername.equals(username) && !isTokenExpired(token);
     }
 
+    public String getStringClaim(String token, String claimKey) {
+        return extractAllClaims(token).get(claimKey, String.class);
+    }
+
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
