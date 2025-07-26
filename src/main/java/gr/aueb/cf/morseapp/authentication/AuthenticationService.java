@@ -34,8 +34,11 @@ public class AuthenticationService {
                 .findByUsername(request.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        String jwtToken = jwtService.generateToken(user);
+        String jwtToken = jwtService.generateToken(
+                user.getUsername(),
+                user.getRole().name()
+        );
 
-        return new AuthenticationResponseDTO(jwtToken, user.getUsername(), user.getRole());
+        return new AuthenticationResponseDTO(jwtToken, user.getUsername(), user.getRole().name());
     }
 }

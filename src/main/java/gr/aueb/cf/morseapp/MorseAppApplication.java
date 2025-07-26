@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class MorseΑppApplication {
+public class MorseAppApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(MorseΑppApplication.class, args);
+		SpringApplication.run(MorseAppApplication.class, args);
 	}
 
 }

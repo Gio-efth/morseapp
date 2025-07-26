@@ -68,14 +68,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             LOGGER.warn("WARN: Expired token ", e);
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.setContentType("application/json");
-            String jsonBody = "{\"code\": \"expired token\", \"message\"" + e.getMessage() + "\"}";
+            String jsonBody = "{\"code\": \"expired_token\", \"message\": \"" + e.getMessage() + "\"}";
             response.getWriter().write(jsonBody);
             return;
         } catch (Exception e) {
             LOGGER.warn("WARN: Something went wrong while parsing JWT ", e);
             response.setStatus(HttpStatus.FORBIDDEN.value());
             response.setContentType("application/json");
-            String jsonBody = "{\"code\": \"invalidToken\", \"description\"" + e.getMessage() + "\"}";
+            String jsonBody = "{\"code\": \"invalidToken\", \"description\": \"" + e.getMessage() + "\"}";
             response.getWriter().write(jsonBody);
             return;
         }
