@@ -4,6 +4,8 @@ import gr.aueb.cf.morseapp.dto.TranslationInsertDTO;
 import gr.aueb.cf.morseapp.dto.TranslationReadOnlyDTO;
 import gr.aueb.cf.morseapp.model.User;
 import gr.aueb.cf.morseapp.service.TranslationService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/translations")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "Bearer Authentication")
+@Tag(name = "translations", description = "Μετατροπές Morse ↔ Κείμενο")
 public class TranslationController {
 
     private final TranslationService translationService;
