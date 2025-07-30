@@ -44,8 +44,13 @@ public class SecurityConfiguration {
                         .accessDeniedHandler(customAccessDeniedHandler)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll() // login, register
-                        .requestMatchers("/api/translations/**").authenticated() // protected endpoints
+                        .requestMatchers(
+                                "/api/auth/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html"
+                        ).permitAll()
+                        .requestMatchers("/api/translations/**").authenticated()
                         .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session
