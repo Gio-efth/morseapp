@@ -2,43 +2,35 @@ package gr.aueb.cf.morseapp.authentication;
 
 import gr.aueb.cf.morseapp.dto.AuthenticationRequestDTO;
 import gr.aueb.cf.morseapp.dto.AuthenticationResponseDTO;
-import gr.aueb.cf.morseapp.model.User;
-import gr.aueb.cf.morseapp.repository.UserRepository;
 import gr.aueb.cf.morseapp.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
 
-    private final UserRepository userRepository;
-    private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
-    public AuthenticationResponseDTO authenticate(AuthenticationRequestDTO request) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
-                        request.getPassword()
-                )
+    public AuthenticationResponseDTO login(AuthenticationRequestDTO req) {
+        Authentication auth = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(req.getUsername(), req.getPassword())
         );
 
-        User user = userRepository
-                .findByUsername(request.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        UserDetails principal = (UserDetails) auth.getPrincipal();
+        String token = jwtService.generateToken(principal);
 
-        String jwtToken = jwtService.generateToken(
-                user.getUsername(),
-                user.getRole().name()
-        );
+        // Αν στο response έχεις και ρόλο, πάρε τον πρώτο από τα authorities
+        String role = principal.getAuthorities().stream()
+                .findFirst()
+                .map(a -> a.getAuthority())
+                .orElse("USER");
 
-        return new AuthenticationResponseDTO(jwtToken, user.getUsername(), user.getRole().name());
+        return new AuthenticationResponseDTO(token, principal.getUsername(), role);
     }
 }

@@ -1,25 +1,33 @@
 package gr.aueb.cf.morseapp.rest;
 
-import gr.aueb.cf.morseapp.authentication.AuthenticationService;
+import gr.aueb.cf.morseapp.security.JwtService;
 import gr.aueb.cf.morseapp.dto.AuthenticationRequestDTO;
 import gr.aueb.cf.morseapp.dto.AuthenticationResponseDTO;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-@Tag(name = "login", description = "Ενέργειες σύνδεσης χρήστη με JWT")
 public class AuthController {
 
-    private final AuthenticationService authenticationService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponseDTO> login(@RequestBody @Valid AuthenticationRequestDTO request) {
-        AuthenticationResponseDTO response = authenticationService.authenticate(request);
-        return ResponseEntity.ok(response);
+    public AuthenticationResponseDTO login(@RequestBody AuthenticationRequestDTO req) {
+
+        Authentication auth = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(req.getUsername(), req.getPassword())
+        );
+
+        UserDetails user = (UserDetails) auth.getPrincipal();
+        String token = jwtService.generateToken(user);
+
+        return new AuthenticationResponseDTO(token, user.getUsername(), "USER");
     }
 }
