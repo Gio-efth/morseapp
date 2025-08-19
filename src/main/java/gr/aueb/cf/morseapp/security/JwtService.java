@@ -21,7 +21,6 @@ public class JwtService {
     private long expirationMs;
 
     private Key key() {
-        // HS256: απαιτούνται >= 32 bytes
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 

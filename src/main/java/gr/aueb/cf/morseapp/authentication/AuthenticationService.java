@@ -25,7 +25,6 @@ public class AuthenticationService {
         UserDetails principal = (UserDetails) auth.getPrincipal();
         String token = jwtService.generateToken(principal);
 
-        // Αν στο response έχεις και ρόλο, πάρε τον πρώτο από τα authorities
         String role = principal.getAuthorities().stream()
                 .findFirst()
                 .map(a -> a.getAuthority())
